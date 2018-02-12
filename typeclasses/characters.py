@@ -44,7 +44,8 @@ class Character(DefaultCharacter):
             puppeting this Object.
         """
         self.msg("\nYou become |c%s|n.\n" % self.name)
-        # self.msg(self.at_look(self.location))
+
+        self.msg(self.at_look(self.location))
         self.show_location()
 
         def message(obj, from_obj):
@@ -58,6 +59,46 @@ class Character(DefaultCharacter):
         print("characters.py at_after_move executed")
         self.msg( ("",{"msg": ("Moving to %s ...") % self.location.name}))
         self.show_location()
+
+    def at_look(self, target, **kwargs):
+        """
+        Called when this object performs a look. It allows to
+        customize just what this means. It will not itself
+        send any data.
+        Args:
+            target (Object): The target being looked at. This is
+                commonly an object or the current location. It will
+                be checked for the "view" type access.
+            **kwargs (dict): Arbitrary, optional arguments for users
+                overriding the call (unused by default).
+        Returns:
+            lookstring (str): A ready-processed look string
+                potentially ready to return to the looker.
+        """
+
+        # HACKY: Prepend an asterix suffix if it's a room to tell client
+        # to squelch room update message on event log
+        print("at_look executed")
+        print("target.typclass_path", target.typeclass_path)
+        if target.typename is 'Room':
+            print("ITS A ROOM TYPECLASS")
+            suffix = "*"
+        else: 
+            suffix = ""
+
+        if not target.access(self, "view"):
+            try:
+                return "Could not view '%s'." % target.get_display_name(self)
+            except AttributeError:
+                return "Could not view '%s'." % target.key
+
+        description = target.return_appearance(self)
+
+        # the target's at_desc() method.
+        # this must be the last reference to target so it may delete itself when acted on.
+        target.at_desc(looker=self)
+        # asterix suffix  prepended to tell client to squelch from event log
+        return suffix + description
 
     def show_location(self):
         print("characters.py show_location executed")
