@@ -30,4 +30,53 @@ class Character(DefaultCharacter):
     at_post_puppet - Echoes "AccountName has entered the game" to the room.
 
     """
+    def at_post_puppet(self, **kwargs):
+        """
+        Called just after puppeting has been completed and all
+        Account<->Object links have been established.
+        Args:
+            **kwargs (dict): Arbitrary, optional arguments for users
+                overriding the call (unused by default).
+        Note:
+            You can use `self.account` and `self.sessions.get()` to get
+            account and sessions at this point;the last entry in the
+            list from `self.sessions.get()` is the latest Session
+            puppeting this Object.
+        """
+        self.msg("\nYou become |c%s|n.\n" % self.name)
+        # self.msg(self.at_look(self.location))
+        self.show_location()
+
+        def message(obj, from_obj):
+            obj.msg("%s has entered the game." % self.get_display_name(obj), from_obj=from_obj)
+        self.location.for_contents(message, exclude=[self], from_obj=self)
+
+    def at_after_move(self, source_location):
+        """
+        We make sure to look around after a move.
+        """
+        print("characters.py at_after_move executed")
+        self.msg( ("",{"msg": ("Moving to %s ...") % self.location.name}))
+        self.show_location()
+
+    def show_location(self):
+        print("characters.py show_location executed")
+        if self.location:
+            location = self.location
+
+            location_dbref = location.id
+            location_name = location.name
+            location_desc = location.db.desc
+            location_contents = list(set(location.contents) - set(location.exits) - set([self]))
+            location_exits = location.exits
+            
+            data = {
+                "dbref": location_dbref,
+                "name": location_name,
+                "desc": location_desc,
+                "contents": location_contents,
+                "exits": location_exits
+            }
+            self.msg(("", {"current_location": data}))
+
     pass
