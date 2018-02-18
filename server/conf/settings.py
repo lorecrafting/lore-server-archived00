@@ -52,7 +52,7 @@ SSH_ENABLED = False
 SSH_PORTS = [4004]
 # Websocket-client port. Visible.
 WEBSOCKET_CLIENT_ENABLED = True
-WEBSOCKET_CLIENT_URL = "wss://www.lorecraft.io/ws"
+WEBSOCKET_CLIENT_URL = "wss://34.216.237.61//ws"
 WEBSOCKET_CLIENT_PORT = 4005
 # Webclient URL
 
