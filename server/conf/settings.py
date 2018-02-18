@@ -52,7 +52,10 @@ SSH_ENABLED = False
 SSH_PORTS = [4004]
 # Websocket-client port. Visible.
 WEBSOCKET_CLIENT_ENABLED = True
+WEBSOCKET_CLIENT_URL = "wss://www.lorecraft.io/ws"
 WEBSOCKET_CLIENT_PORT = 4005
+# Webclient URL
+
 # Internal Server-Portal port. Not visible.
 AMP_PORT = 4006
 IN_GAME_ERRORS = True
