@@ -54,11 +54,14 @@ SSH_PORTS = [4004]
 WEBSOCKET_CLIENT_ENABLED = True
 WEBSOCKET_CLIENT_URL = "wss://34.216.237.61/ws"
 WEBSOCKET_CLIENT_PORT = 4005
-# Webclient URL
 
 # Internal Server-Portal port. Not visible.
 AMP_PORT = 4006
 IN_GAME_ERRORS = True
+
+# New character start location and default home
+DEFAULT_HOME = "#3"
+START_LOCATION = "#3"
 
 ######################################################################
 # Settings given in secret_settings.py override those in this file.
