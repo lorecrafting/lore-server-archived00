@@ -57,7 +57,7 @@ class Character(DefaultCharacter):
         We make sure to look around after a move.
         """
         print("characters.py at_after_move executed")
-        self.msg( ("",{"msg": ("Moving to %s ...") % self.location.name}))
+        self.msg("Moving to %s ..." % self.location.name)
         self.show_location()
 
     def at_look(self, target, **kwargs):
@@ -118,6 +118,6 @@ class Character(DefaultCharacter):
                 "contents": location_contents,
                 "exits": location_exits
             }
-            self.msg(("", {"current_location": data}))
+            self.msg(update_player_location=data)
 
     pass
