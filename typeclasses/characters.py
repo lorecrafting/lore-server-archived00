@@ -100,7 +100,14 @@ class Character(DefaultCharacter):
         # asterix suffix  prepended to tell client to squelch from event log
         return suffix + description
 
-    def show_location(self):
+    def show_location(self, clearLog = True):
+        """
+        Constructs a dict representing room data and contents to be sent to client
+        Args:
+            clearLog (bool): Tells the client to clear the event log or not.
+                Moving rooms should clear logs, dropping and picking up objects also call
+                this function but doesn't need to clear entire log.
+        """
         print("characters.py show_location executed")
         if self.location:
             location = self.location
@@ -116,7 +123,8 @@ class Character(DefaultCharacter):
                 "name": location_name,
                 "desc": location_desc,
                 "contents": location_contents,
-                "exits": location_exits
+                "exits": location_exits,
+                "clearLog": clearLog
             }
             self.msg(update_player_location=data)
 

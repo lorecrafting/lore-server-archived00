@@ -6,6 +6,11 @@ Commands describe the input the account can do to the game.
 """
 
 from evennia import Command as BaseCommand
+from evennia.utils import utils
+from django.conf import settings
+
+COMMAND_DEFAULT_CLASS = utils.class_from_module(settings.COMMAND_DEFAULT_CLASS)
+
 # from evennia import default_cmds
 
 
@@ -183,3 +188,89 @@ class Command(BaseCommand):
 #                 self.character = self.caller.get_puppet(self.session)
 #             else:
 #                 self.character = None
+class CmdDrop(COMMAND_DEFAULT_CLASS):
+    """
+    drop something
+    Usage:
+      drop <obj>
+    Lets you drop an object from your inventory into the
+    location you are currently in.
+    """
+    key = "drop"
+    locks = "cmd:all()"
+    arg_regex = r"\s|$"
+
+    def func(self):
+        """Implement command"""
+
+        caller = self.caller
+        if not self.args:
+            caller.msg("Drop what?")
+            return
+
+        # Because the DROP command by definition looks for items
+        # in inventory, call the search function using location = caller
+        obj = caller.search(self.args, location=caller,
+                            nofound_string="You aren't carrying %s." % self.args,
+                            multimatch_string="You carry more than one %s:" % self.args)
+        if not obj:
+            return
+
+        obj.move_to(caller.location, quiet=True)
+        # Call show_location to update UI with new state of room but don't clear UI event log
+        caller.show_location(clearLog = False)
+        caller.msg("You drop %s." % (obj.name,))
+        caller.location.msg_contents("%s drops %s." %
+                                     (caller.name, obj.name),
+                                     exclude=caller)
+        # Call the object script's at_drop() method.
+        obj.at_drop(caller)
+
+
+class CmdGet(COMMAND_DEFAULT_CLASS):
+    """
+    pick up something
+    Usage:
+      get <obj>
+    Picks up an object from your location and puts it in
+    your inventory.
+    """
+
+    key = "get"
+    aliases = "grab"
+    locks = "cmd:all()"
+    arg_regex = r"\s|$"
+
+
+
+    def func(self):
+        """implements the command."""
+
+        caller = self.caller
+
+        if not self.args:
+            caller.msg("Get what?")
+            return
+        obj = caller.search(self.args, location=caller.location)
+        if not obj:
+            return
+        if caller == obj:
+            caller.msg("You can't get yourself.")
+            return
+        if not obj.access(caller, 'get'):
+            if obj.db.get_err_msg:
+                caller.msg(obj.db.get_err_msg)
+            else:
+                caller.msg("You can't get that.")
+            return
+
+        obj.move_to(caller, quiet=True)
+        # Call show_location to update UI with new state of room but don't clear UI event log
+        caller.show_location(clearLog = False)
+        caller.msg("You pick up %s." % obj.name)
+        caller.location.msg_contents("%s picks up %s." %
+                                     (caller.name,
+                                      obj.name),
+                                     exclude=caller)
+        # calling hook method
+        obj.at_get(caller)
