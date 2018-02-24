@@ -217,8 +217,12 @@ class CmdDrop(COMMAND_DEFAULT_CLASS):
             return
 
         obj.move_to(caller.location, quiet=True)
-        # Call show_location to update UI with new state of room but don't clear UI event log
-        caller.show_location(clearLog = False)
+
+        #Call show_location to update UI on all Characters in room
+        for item in caller.location.contents:
+            if item.typename == "Character":
+                item.show_location(clearLog = False)
+                
         caller.msg("You drop %s." % (obj.name,))
         caller.location.msg_contents("%s drops %s." %
                                      (caller.name, obj.name),
@@ -265,8 +269,13 @@ class CmdGet(COMMAND_DEFAULT_CLASS):
             return
 
         obj.move_to(caller, quiet=True)
-        # Call show_location to update UI with new state of room but don't clear UI event log
-        caller.show_location(clearLog = False)
+
+
+        #Call show_location to update UI on all Characters in room
+        for item in caller.location.contents:
+            if item.typename == "Character":
+                item.show_location(clearLog = False)
+
         caller.msg("You pick up %s." % obj.name)
         caller.location.msg_contents("%s picks up %s." %
                                      (caller.name,
