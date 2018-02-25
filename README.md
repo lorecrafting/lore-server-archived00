@@ -11,13 +11,26 @@ organisation (the only exception is the directory structure of the
 you must however also edit/add to your settings file to tell Evennia
 where to look for things.
 
+## First Time Setup
+
+https://github.com/evennia/evennia/wiki/Getting-Started#mac-install
+
+Follow instructions just right up before it tells you to do `evennia --init mygame`.
+Since this is our game folder we don't need to init a new one.  Just follow directions up 
+to initting the game, and instead of initting, just cd into the repository you cloned down to your local machine
+and start the server.
+
+## Starting Server 
+
 Your game's main configuration file is found in
 `server/conf/settings.py` (but you don't need to change it to get
 started). If you just created this directory (which means you'll already
 have a `virtualenv` running if you followed the default instructions),
 `cd` to this directory then initialize a new database using
 
+
     evennia migrate
+    (You may receive a seeder database in which case you don't need to migrate)
 
 To start the server, stand in this directory and run
 
@@ -29,7 +42,7 @@ to your new game using a MUD client on `localhost`, port `4000`.  You can
 also log into the web client by pointing a browser to
 `http://localhost:4001`.
 
-# Getting started
+# Resources
 
 From here on you might want to look at one of the beginner tutorials:
 http://github.com/evennia/evennia/wiki/Tutorials.
