@@ -15,7 +15,7 @@ own cmdsets by inheriting from them or directly from `evennia.CmdSet`.
 """
 
 from evennia import default_cmds
-from commands.command import CmdGet, CmdDrop
+from commands.command import CmdGet, CmdDrop, CmdLook
 
 
 
@@ -37,6 +37,7 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         #
         self.add(CmdGet())
         self.add(CmdDrop())
+        self.add(CmdLook())
 
 
 
