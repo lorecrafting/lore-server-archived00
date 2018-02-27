@@ -92,7 +92,19 @@ class Account(DefaultAccount):
      at_server_shutdown()
 
     """
-    pass
+    def at_disconnect(self, reason=None, **kwargs):
+        """
+        Called just before user is disconnected.
+        Args:
+            reason (str, optional): The reason given for the disconnect,
+                (echoed to the connection channel by default).
+            **kwargs (dict): Arbitrary, optional arguments for users
+                overriding the call (unused by default).
+        """
+        reason = " (%s)" % reason if reason else ""
+        
+        self.msg(logged_out={})
+        self._send_to_connect_channel("|R%s disconnected%s|n" % (self.key, reason))
 
 
 class Guest(DefaultGuest):
